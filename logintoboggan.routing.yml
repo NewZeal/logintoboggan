@@ -1,0 +1,33 @@
+logintoboggan.user_validate:
+  path: '/user/validate/{user}/{timestamp}/{hashed_pass}/{operation}'
+  defaults:
+    _title: 'Validate e-mail address'
+    _controller: '\Drupal\logintoboggan\Controller\LogintobogganController::logintobogganValidateEmail'
+    operation: 'login'
+  requirements:
+    _logintoboggan_validate_email_access: 'TRUE'
+
+logintoboggan.user_revalidate:
+  path: '/toboggan/revalidate/{user}'
+  defaults:
+    _title: 'Re-send validation e-mail'
+    _controller: '\Drupal\logintoboggan\Controller\LogintobogganController::logintobogganResendValidation'
+  requirements:
+    _logintoboggan_revalidate_access: 'TRUE'
+
+logintoboggan.denied:
+  path: '/toboggan/denied'
+  defaults:
+    _title: 'Access denied'
+    _controller: '\Drupal\logintoboggan\Controller\LogintobogganController::logintobogganDenied'
+  requirements:
+    _access: 'TRUE'
+
+logintoboggan.settings:
+   path: '/admin/config/people/logintoboggan'
+   defaults:
+      _form: '\Drupal\logintoboggan\Form\LogintobogganSettingsForm'
+      _title: 'LoginToboggan'
+   requirements:
+     _permission: 'administer account settings'
+

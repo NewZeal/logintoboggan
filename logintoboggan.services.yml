@@ -1,0 +1,9 @@
+services:
+  access_check.logintoboggan.validate_access:
+    class: Drupal\logintoboggan\Access\LogintobogganValidateAccess
+    tags:
+      - { name: access_check, applies_to: _logintoboggan_validate_email_access }
+  access_check.logintoboggan.revalidate_access:
+    class: Drupal\logintoboggan\Access\LogintobogganReValidateAccess
+    tags:
+      - { name: access_check, applies_to: _logintoboggan_revalidate_access }

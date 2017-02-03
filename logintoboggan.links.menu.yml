@@ -1,0 +1,5 @@
+logintoboggan.admin_settings:
+  title: Logintoboggan
+  description: 'Logintoboggan settings'
+  route_name: logintoboggan.settings
+  parent: user.admin_index

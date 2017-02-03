@@ -1,0 +1,15 @@
+<?php
+
+/**
+* @file
+* Install, update and uninstall functions for the logintoboggan module.
+*/
+
+
+/**
+ * Implement hook_uninstall().
+ */
+function logintoboggan_uninstall() {
+//  $config = Drupal::config('logintoboggan.settings');
+//  $config->delete();
+}

@@ -1,0 +1,5 @@
+name: LoginToboggan
+type: module
+description: "Improves Drupal's login system."
+core: 8.x
+configure: logintobogganform.settings

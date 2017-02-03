@@ -1,0 +1,11 @@
+unified_login: false
+pre_auth_role: 2
+redirect_on_confirm: false
+override_destination_parameter: true
+login_successful_message: false
+minimum_password_length: false
+login_with_email: false
+confirm_email_at_registration: false
+purge_unvalidated_user_interval: false
+immediate_login_on_register: true
+login_block_type: false
