@@ -1,3 +1,4 @@
+set_password: false
 unified_login: false
 pre_auth_role: 2
 redirect_on_confirm: false
@@ -9,3 +10,8 @@ confirm_email_at_registration: false
 purge_unvalidated_user_interval: false
 immediate_login_on_register: true
 login_block_type: false
+admin_email_text: "\n\nThe user has automatically received the permissions of the LoginToboggan validating role. To
+give the user full site permissions, click the link below:\n\n@validation_url/admin\n\nAlternatively, you may visit their user account listed above and remove them from the validating role."
+message_preauth_validate: "You have successfully validated your e-mail address."
+email_validation.subject: "Confirm your email"
+email_validation.body: "[user:validate-url]"

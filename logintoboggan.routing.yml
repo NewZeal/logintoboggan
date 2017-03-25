@@ -31,3 +31,11 @@ logintoboggan.settings:
    requirements:
      _permission: 'administer account settings'
 
+logintoboggan.email_validation:
+  path: '/user/email-validation'
+  defaults:
+    _title: 'Email Validation'
+    _controller: '\Drupal\logintoboggan\Controller\LogintobogganController::logintobogganEmailValidation'
+  requirements:
+    _access: 'TRUE'
+
