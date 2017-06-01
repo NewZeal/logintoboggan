@@ -156,7 +156,7 @@ class LogintobogganController implements ContainerInjectionInterface {
 
   /**
    * This will return the output of the page.
-   */
+   */F
   public function logintobogganDenied() {
     $account = \Drupal::currentUser();
 
