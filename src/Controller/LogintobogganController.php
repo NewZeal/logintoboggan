@@ -6,8 +6,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\user\Entity\User;
+use Drupal\logintoboggan\LogintobogganTrait;
+
 
 class LogintobogganController implements ContainerInjectionInterface {
+
+  use LogintobogganTrait;
 
   public static function create(ContainerInterface $container) {
     return new static($container->get('module_handler'));
@@ -20,7 +24,17 @@ class LogintobogganController implements ContainerInjectionInterface {
 
     $account = User::load($user);
     $cur_account = \Drupal::currentUser();
+    $config = \Drupal::config('logintoboggan.settings');
 
+    // On validation the url appears to be firing twice
+    // Adding this until that can be sorted
+    if(!$cur_account->isAnonymous()) {
+      $goto = 'user.page';
+      if ($config->get('redirect_on_confirm')) {
+        $goto = $config->get('redirect_on_confirm');
+      }
+      return new RedirectResponse(\Drupal::url($goto));
+    }
     // Test here for a valid pre-auth -- if the pre-auth is set to the auth user, we
     // handle things a bit differently.
 
@@ -29,7 +43,6 @@ class LogintobogganController implements ContainerInjectionInterface {
     $pre_auth = !\Drupal::config('user.settings')->get('verify_mail')
               && $validating_id != DRUPAL_AUTHENTICATED_RID;
 
-    \Drupal::logger('logintoboggan')->notice('preauth '. $pre_auth);
     // No time out for first time login.
     // This conditional checks that:
     // - the user is still in the pre-auth role or didn't set
@@ -38,8 +51,6 @@ class LogintobogganController implements ContainerInjectionInterface {
     if (((\Drupal::config('user.settings')->get('verify_mail')
       && !$account->getLastLoginTime()) || ($pre_auth && $account->hasRole($validating_id)))
       && $hashed_pass == logintoboggan_eml_rehash($account, $timestamp, $account->getEmail())) {
-
-      \Drupal::logger('logintoboggan')->notice('validating now '. $validating_id);
 
       \Drupal::logger('logintoboggan')->notice('E-mail validation URL used for %name with timestamp @timestamp.', array(
         '%name'      => $account->getUsername(),
@@ -56,7 +67,7 @@ class LogintobogganController implements ContainerInjectionInterface {
         case 'login':
           // Only show the validated message if there's a valid pre-auth role.
           if ($pre_auth) {
-            drupal_set_message(t('You have successfully validated your e-mail address.'));
+            drupal_set_message(t($config->get('message_preauth_validate')));
           }
           if ($account->isBlocked()) {
             drupal_set_message(t('Your account is currently blocked -- login cancelled.'), 'error');
@@ -110,7 +121,7 @@ class LogintobogganController implements ContainerInjectionInterface {
    * This will return the output of the page.
    */
   public function logintobogganResendValidation($user) {
-    $account = user_load($user);
+    $account = User::load($user);
     /**************************************************************************/
     $account->password = t('If required, you may reset your password from: !url', array(
       '!url' => url('user/password', array('absolute' => TRUE)),
@@ -128,6 +139,19 @@ class LogintobogganController implements ContainerInjectionInterface {
     }
 
     return new RedirectResponse(\Drupal::url('user.edit', array('user' => $user)));
+  }
+
+  /**
+   * Allow user to resend email validation by entering their email
+   */
+  public function logintobogganEmailValidation() {
+    $mail = isset($_GET['mail']) ? $_GET['mail'] : NULL;
+
+    if (isset($mail) && valid_email_address($mail)) {
+      $this->validateEmailSend($mail);
+      return new RedirectResponse('/');
+    }
+    return \Drupal::formBuilder()->getForm('Drupal\logintoboggan\Form\LogintobogganEmailValidationForm');
   }
 
   /**
