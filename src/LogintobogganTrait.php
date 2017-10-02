@@ -4,8 +4,6 @@ namespace Drupal\logintoboggan;
 
 /**
  *
- *
- *
  */
 trait LogintobogganTrait {
 
