@@ -1,0 +1,15 @@
+{  
+  "name": "newzeal/logintoboggan",
+  "type": "drupal-module",
+  "description": "",
+  "keywords": ["Drupal"],
+  "license": "",
+  "homepage": "",
+  "minimum-stability": "dev",
+  "authors": [  
+  ],
+  "support": {  
+  },
+  "require": {  
+  }
+}
